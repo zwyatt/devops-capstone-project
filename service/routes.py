@@ -68,6 +68,7 @@ def create_accounts():
 # READ AN ACCOUNT
 ######################################################################
 
+# ... place you code here to READ an account ...
 @app.route("/accounts/<id>", methods=["GET"])
 def read_account(id):
     """
@@ -86,39 +87,14 @@ def read_account(id):
 # UPDATE AN EXISTING ACCOUNT
 ######################################################################
 
-@app.route("/accounts/<id>", methods=["PUT"])
-def update_account(id):
-    """
-    Updates an Account
-    This endpoint will update an account given an account id and data
-    """
-    app.logger.info(f"Request to update account with id: {id}")
-    account = Account.find(id)
-    if not account:
-        abort(status.HTTP_404_NOT_FOUND, f"Could not find Account with id {id}")
-    
-    account.deserialize(request.get_json())
-    account.update()
-    
-    return account.serialize(), status.HTTP_200_OK
+# ... place you code here to UPDATE an account ...
 
 
 ######################################################################
 # DELETE AN ACCOUNT
 ######################################################################
 
-@app.route("/accounts/<id>", methods=["DELETE"])
-def delete_account(id):
-    """
-    Deletes an Account
-    This endpoint will delete an account given an account id
-    """
-    app.logger.info(f"Request to delete account with id: {id}")
-    account = Account.find(id)
-    if account:
-        account.delete()
-    
-    return "", status.HTTP_204_NO_CONTENT
+# ... place you code here to DELETE an account ...
 
 
 ######################################################################
