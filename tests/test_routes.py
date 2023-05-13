@@ -132,7 +132,48 @@ class TestAccountService(TestCase):
         self.assertEqual(response.json["name"], account.name)
     
     def test_account_not_found(self):
-        """It should return 404 when given account id that doesn't exist"""
+        """It should return 404 when trying to read account id that doesn't exist"""
         response = self.client.get(f"{BASE_URL}/{0}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_update_account(self):
+        """It should update an account"""
+        account = self._create_accounts(1)[0]
+        account.name = "pizza"
+        response = self.client.put( 
+            f"{BASE_URL}/{account.id}",
+            json=account.serialize(),
+            content_type="application/json"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        
+        response = self.client.get(f"{BASE_URL}/{account.id}")
+        self.assertEqual(response.json["name"], "pizza")
+    
+    def test_update_account_not_found(self):
+        """It should return 404 when trying to update account id that doesn't exist"""
+        response = self.client.put(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_delete_account(self):
+        """It should delete an account"""
+        accounts = self._create_accounts(2)
+        response = self.client.delete(f"{BASE_URL}/{accounts[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+
+        response = self.client.get(f"{BASE_URL}/{accounts[0].id}")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+        response = self.client.get(f"{BASE_URL}/{accounts[1].id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_method_not_allowed(self):
+        """It should return 405 code when making unsupported HTTP method requests on endpoints"""
+        response = self.client.post(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.put(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.delete(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
