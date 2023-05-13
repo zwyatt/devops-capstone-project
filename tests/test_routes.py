@@ -131,7 +131,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json["name"], account.name)
     
-    def test_account_not_found(self):
+    def test_read_account_not_found(self):
         """It should return 404 when given account id that doesn't exist"""
         response = self.client.get(f"{BASE_URL}/{0}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
@@ -163,3 +163,26 @@ class TestAccountService(TestCase):
 
         response = self.client.get(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+    
+    def test_list_accounts(self):
+        """It should list all accounts"""
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.get_json(), [])
+
+        self._create_accounts(10)
+        response = self.client.get(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), 10)
+    
+    def test_method_not_allowed(self):
+        """It should not allow unsupported methods on endpoints"""
+        response = self.client.post(f"{BASE_URL}/0")
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.put(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+        response = self.client.delete(BASE_URL)
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
