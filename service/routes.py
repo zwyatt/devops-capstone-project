@@ -83,7 +83,7 @@ def list_accounts():
 def read_account(id):
     """
     Reads an Account
-    This endpoint will read an account given an account id
+    This endpoint will read an account
     """
     app.logger.info(f"Request to read account with id: {id}")
     account = Account.find(id)
@@ -102,12 +102,12 @@ def read_account(id):
 def update_account(id):
     """
     Updates an Account
-    This endpoint will update an account given an account id and data
+    This endpoint will update an account
     """
     app.logger.info(f"Request to update account with id: {id}")
     account = Account.find(id)
     if not account:
-        abort(status.HTTP_404_NOT_FOUND, f"Could not find Account with id {id}")
+        abort(status.HTTP_404_NOT_FOUND, f"Could not find account with id {id}")
 
     account.deserialize(request.get_json())
     account.update()
@@ -124,7 +124,7 @@ def update_account(id):
 def delete_account(id):
     """
     Deletes an Account
-    This endpoint will delete an account given an account id
+    This endpoint will delete an account
     """
     app.logger.info(f"Request to delete account with id: {id}")
     account = Account.find(id)
