@@ -130,7 +130,7 @@ class TestAccountService(TestCase):
         response = self.client.get(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json["name"], account.name)
-    
+
     def test_read_account_not_found(self):
         """It should return 404 when given account id that doesn't exist"""
         response = self.client.get(f"{BASE_URL}/{0}")
@@ -140,21 +140,21 @@ class TestAccountService(TestCase):
         """It should update an account"""
         account = self._create_accounts(1)[0]
         account.name = "pizza"
-        response = self.client.put( 
+        response = self.client.put(
             f"{BASE_URL}/{account.id}",
             json=account.serialize(),
             content_type="application/json"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-        
+
         response = self.client.get(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.json["name"], "pizza")
-    
+
     def test_update_account_not_found(self):
         """It should return 404 when given account id that doesn't exist"""
         response = self.client.put(f"{BASE_URL}/{0}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_delete_account(self):
         """It should delete an account"""
         account = self._create_accounts(1)[0]
@@ -163,7 +163,7 @@ class TestAccountService(TestCase):
 
         response = self.client.get(f"{BASE_URL}/{account.id}")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
+
     def test_list_accounts(self):
         """It should list all accounts"""
         response = self.client.get(BASE_URL)
@@ -175,7 +175,7 @@ class TestAccountService(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 10)
-    
+
     def test_method_not_allowed(self):
         """It should not allow unsupported methods on endpoints"""
         response = self.client.post(f"{BASE_URL}/0")
