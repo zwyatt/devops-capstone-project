@@ -69,7 +69,7 @@ spec:
       default: "sqlite:///test.db"
   steps:
     - name: nosetests
-      image: python:3.19-lite
+      image: python:3.9-slim
       workingDir: $(workspaces.source.path)
       env:
         - name: DATABASE_URI
@@ -82,6 +82,6 @@ spec:
         python -m pip install --upgrade pip wheel
         pip install -qr requirements.txt
 
-        echo "***** Running nosetests with: $params.args)"
+        echo "***** Running nosetests with: $(params.args)"
         nosetests -v --with-spec --spec-color
 
